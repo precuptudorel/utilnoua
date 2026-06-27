@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculator an de pensionare</title>
+</head>
+
+<body style="
+margin:0;
+font-family:Arial, sans-serif;
+color:white;
+
+background:#7b9148 url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1920&q=80') no-repeat center center / cover;
+min-height:100vh;
+
+display:flex;
+justify-content:center;
+align-items:flex-start;
+
+padding:20px;
+box-sizing:border-box;
+">
+
+<div class="container" style="
+width:100%;
+max-width:420px;
+background:rgba(0,0,0,0.55);
+padding:20px;
+border-radius:14px;
+backdrop-filter:blur(6px);
+box-sizing:border-box;
+">
+
+<h1 style="text-align:center; font-size:22px;">Calculator an de pensionare</h1>
+
+<label>Luna și anul nașterii:</label>
+<input type="number" id="lunaN" placeholder="Luna (1-12)" min="1" max="12" style="width:100%; padding:10px; margin:5px 0 10px; border:none; border-radius:6px;">
+
+<input type="number" id="anN" placeholder="An (ex: 1964)" style="width:100%; padding:10px; margin:5px 0 10px; border:none; border-radius:6px;">
+
+<label>Luna și anul începerii activității:</label>
+<input type="number" id="lunaM" placeholder="Luna (1-12)" min="1" max="12" style="width:100%; padding:10px; margin:5px 0 10px; border:none; border-radius:6px;">
+
+<input type="number" id="anM" placeholder="An (ex: 1988)" style="width:100%; padding:10px; margin:5px 0 10px; border:none; border-radius:6px;">
+
+<button onclick="calculeaza()" style="
+width:100%;
+padding:10px;
+margin-top:5px;
+margin-bottom:10px;
+border-radius:6px;
+border:none;
+font-size:16px;
+background-color:#ffffff;
+color:#000;
+font-weight:bold;
+cursor:pointer;
+">
+Calculează
+</button>
+
+<h2 id="rezultat" style="text-align:center; margin-top:20px;"></h2>
+
+</div>
+
+<script>
+function calculeaza(){
+
+    const lunaN = parseInt(document.getElementById("lunaN").value);
+    const anN = parseInt(document.getElementById("anN").value);
+
+    const lunaM = parseInt(document.getElementById("lunaM").value);
+    const anM = parseInt(document.getElementById("anM").value);
+
+    if(!lunaN || !anN || !lunaM || !anM){
+        document.getElementById("rezultat").innerText =
+        "Completați toate câmpurile.";
+        return;
+    }
+
+    if(lunaN < 1 || lunaN > 12 || lunaM < 1 || lunaM > 12){
+        document.getElementById("rezultat").innerText =
+        "Luna trebuie să fie între 1 și 12.";
+        return;
+    }
+
+    const nastere = new Date(anN, lunaN - 1, 1);
+    const munca = new Date(anM, lunaM - 1, 1);
+
+    const data60 = new Date(nastere);
+    data60.setFullYear(data60.getFullYear() + 60);
+
+    const data40 = new Date(munca);
+    data40.setFullYear(data40.getFullYear() + 40);
+
+    const pensionare = (data60 > data40) ? data60 : data40;
+
+    const luni = [
+      "ianuarie","februarie","martie","aprilie","mai","iunie",
+      "iulie","august","septembrie","octombrie","noiembrie","decembrie"
+    ];
+
+    const formatRO = (d) =>
+      luni[d.getMonth()] + " " + d.getFullYear();
+
+    document.getElementById("rezultat").innerHTML =
+        "<b>Data pensionării:</b><br><br>" +
+        formatRO(pensionare);
+}
+</script>
+
+</body>
+</html>
